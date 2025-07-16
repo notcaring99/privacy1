@@ -237,11 +237,18 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
         }
         
         .image-preview {
-            max-width: 200px;
-            max-height: 150px;
+            max-width: 250px;
+            max-height: 180px;
             border-radius: 8px;
             margin-top: 0.5rem;
             object-fit: cover;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .image-preview:hover {
+            border-color: #ff6b3d;
+            transform: scale(1.02);
         }
         
         .image-group {
@@ -307,6 +314,44 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
             text-align: center;
         }
         
+        .url-input-group {
+            position: relative;
+        }
+        
+        .url-input-group input[type="url"] {
+            padding-left: 2.5rem;
+        }
+        
+        .url-input-group::before {
+            content: "🔗";
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+            font-size: 1.2rem;
+        }
+        
+        .image-status {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .image-status.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .image-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
         @media (max-width: 768px) {
             .main-grid {
                 grid-template-columns: 1fr;
@@ -322,6 +367,11 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
             
             .image-group {
                 grid-template-columns: 1fr;
+            }
+            
+            .image-preview {
+                max-width: 100%;
+                max-height: 150px;
             }
         }
     </style>
@@ -435,63 +485,94 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
                     </div>
                     
                     <div id="images" class="tab-content">
-                        <form action="upload_image.php" method="POST" enctype="multipart/form-data">
+                        <form action="update_images.php" method="POST">
                             <div class="image-group">
                                 <div class="form-group">
-                                    <label for="cover_image">Banner/Capa</label>
-                                    <input type="file" id="cover_image" name="cover_image" accept="image/*">
+                                    <label for="cover_image">Banner/Capa (URL da Imagem)</label>
+                                    <div class="url-input-group">
+                                        <input type="url" id="cover_image" name="cover_image" placeholder="https://i.imgur.com/exemplo.jpg" value="<?= htmlspecialchars($images['cover_image']['image_path'] ?? '') ?>" onchange="previewImage(this, 'cover_preview')">
+                                    </div>
+                                    <div class="image-status" id="cover_status"></div>
                                     <?php if (isset($images['cover_image']) && $images['cover_image']['image_path']): ?>
-                                        <img src="../<?= htmlspecialchars($images['cover_image']['image_path']) ?>" alt="Banner" class="image-preview">
+                                        <img src="<?= htmlspecialchars($images['cover_image']['image_path']) ?>" alt="Banner" class="image-preview" id="cover_preview">
                                     <?php endif; ?>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="profile_image_main">Foto de Perfil Principal</label>
-                                    <input type="file" id="profile_image_main" name="profile_image_main" accept="image/*">
+                                    <label for="profile_image_main">Foto de Perfil Principal (URL da Imagem)</label>
+                                    <div class="url-input-group">
+                                        <input type="url" id="profile_image_main" name="profile_image_main" placeholder="https://i.imgur.com/perfil.jpg" value="<?= htmlspecialchars($images['profile_image_main']['image_path'] ?? '') ?>" onchange="previewImage(this, 'profile_main_preview')">
+                                    </div>
+                                    <div class="image-status" id="profile_main_status"></div>
                                     <?php if (isset($images['profile_image_main']) && $images['profile_image_main']['image_path']): ?>
-                                        <img src="<?= htmlspecialchars($images['profile_image_main']['image_path']) ?>" alt="Perfil Principal" class="image-preview">
+                                        <img src="<?= htmlspecialchars($images['profile_image_main']['image_path']) ?>" alt="Perfil Principal" class="image-preview" id="profile_main_preview">
                                     <?php endif; ?>
                                 </div>
                             </div>
                             
                             <div class="image-group">
                                 <div class="form-group">
-                                    <label for="profile_image">Foto de Perfil Popup</label>
-                                    <input type="file" id="profile_image" name="profile_image" accept="image/*">
+                                    <label for="profile_image">Foto de Perfil Popup (URL da Imagem)</label>
+                                    <div class="url-input-group">
+                                        <input type="url" id="profile_image" name="profile_image" placeholder="https://i.imgur.com/popup.jpg" value="<?= htmlspecialchars($images['profile_image']['image_path'] ?? '') ?>" onchange="previewImage(this, 'profile_popup_preview')">
+                                    </div>
+                                    <div class="image-status" id="profile_popup_status"></div>
                                     <?php if (isset($images['profile_image']) && $images['profile_image']['image_path']): ?>
-                                        <img src="../<?= htmlspecialchars($images['profile_image']['image_path']) ?>" alt="Perfil Popup" class="image-preview">
+                                        <img src="<?= htmlspecialchars($images['profile_image']['image_path']) ?>" alt="Perfil Popup" class="image-preview" id="profile_popup_preview">
                                     <?php endif; ?>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="content_image1">Imagem de Conteúdo 1</label>
-                                    <input type="file" id="content_image1" name="content_image1" accept="image/*">
+                                    <label for="content_image1">Imagem de Conteúdo 1 (URL da Imagem)</label>
+                                    <div class="url-input-group">
+                                        <input type="url" id="content_image1" name="content_image1" placeholder="https://i.imgur.com/conteudo1.jpg" value="<?= htmlspecialchars($images['content_image1']['image_path'] ?? '') ?>" onchange="previewImage(this, 'content1_preview')">
+                                    </div>
+                                    <div class="image-status" id="content1_status"></div>
                                     <?php if (isset($images['content_image1']) && $images['content_image1']['image_path']): ?>
-                                        <img src="../<?= htmlspecialchars($images['content_image1']['image_path']) ?>" alt="Conteúdo 1" class="image-preview">
+                                        <img src="<?= htmlspecialchars($images['content_image1']['image_path']) ?>" alt="Conteúdo 1" class="image-preview" id="content1_preview">
                                     <?php endif; ?>
                                 </div>
                             </div>
                             
                             <div class="image-group">
                                 <div class="form-group">
-                                    <label for="content_image2">Imagem de Conteúdo 2</label>
-                                    <input type="file" id="content_image2" name="content_image2" accept="image/*">
+                                    <label for="content_image2">Imagem de Conteúdo 2 (URL da Imagem)</label>
+                                    <div class="url-input-group">
+                                        <input type="url" id="content_image2" name="content_image2" placeholder="https://i.imgur.com/conteudo2.jpg" value="<?= htmlspecialchars($images['content_image2']['image_path'] ?? '') ?>" onchange="previewImage(this, 'content2_preview')">
+                                    </div>
+                                    <div class="image-status" id="content2_status"></div>
                                     <?php if (isset($images['content_image2']) && $images['content_image2']['image_path']): ?>
-                                        <img src="../<?= htmlspecialchars($images['content_image2']['image_path']) ?>" alt="Conteúdo 2" class="image-preview">
+                                        <img src="<?= htmlspecialchars($images['content_image2']['image_path']) ?>" alt="Conteúdo 2" class="image-preview" id="content2_preview">
                                     <?php endif; ?>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="logo">Logo Privacy</label>
-                                    <input type="file" id="logo" name="logo" accept="image/*">
+                                    <label for="logo">Logo Privacy (URL da Imagem)</label>
+                                    <div class="url-input-group">
+                                        <input type="url" id="logo" name="logo" placeholder="https://i.imgur.com/logo.svg" value="<?= htmlspecialchars($images['logo']['image_path'] ?? '') ?>" onchange="previewImage(this, 'logo_preview')">
+                                    </div>
+                                    <div class="image-status" id="logo_status"></div>
                                     <?php if (isset($images['logo']) && $images['logo']['image_path']): ?>
-                                        <img src="../<?= htmlspecialchars($images['logo']['image_path']) ?>" alt="Logo" class="image-preview">
+                                        <img src="<?= htmlspecialchars($images['logo']['image_path']) ?>" alt="Logo" class="image-preview" id="logo_preview">
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            
+                            <div class="image-group">
+                                <div class="form-group">
+                                    <label for="top_bar_logo">Logo Barra Superior (URL da Imagem)</label>
+                                    <div class="url-input-group">
+                                        <input type="url" id="top_bar_logo" name="top_bar_logo" placeholder="https://i.imgur.com/top-logo.png" value="<?= htmlspecialchars($images['top_bar_logo']['image_path'] ?? '') ?>" onchange="previewImage(this, 'top_logo_preview')">
+                                    </div>
+                                    <div class="image-status" id="top_logo_status"></div>
+                                    <?php if (isset($images['top_bar_logo']) && $images['top_bar_logo']['image_path']): ?>
+                                        <img src="<?= htmlspecialchars($images['top_bar_logo']['image_path']) ?>" alt="Logo Barra Superior" class="image-preview" id="top_logo_preview">
                                     <?php endif; ?>
                                 </div>
                             </div>
                             
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-upload"></i> Atualizar Imagens
+                                <i class="fas fa-save"></i> Salvar URLs das Imagens
                             </button>
                         </form>
                     </div>
@@ -555,6 +636,56 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
             
             // Add active class to clicked tab
             event.target.classList.add('active');
+        }
+        
+        function previewImage(input, previewId) {
+            const url = input.value.trim();
+            const preview = document.getElementById(previewId);
+            const statusId = input.id + '_status';
+            const status = document.getElementById(statusId);
+            
+            if (!url) {
+                if (preview) preview.style.display = 'none';
+                status.className = 'image-status';
+                return;
+            }
+            
+            // Validar se é uma URL válida
+            try {
+                new URL(url);
+            } catch {
+                status.className = 'image-status error';
+                status.textContent = 'URL inválida';
+                if (preview) preview.style.display = 'none';
+                return;
+            }
+            
+            // Verificar se a imagem carrega
+            const img = new Image();
+            img.onload = function() {
+                if (preview) {
+                    preview.src = url;
+                    preview.style.display = 'block';
+                } else {
+                    // Criar preview se não existir
+                    const newPreview = document.createElement('img');
+                    newPreview.src = url;
+                    newPreview.alt = 'Preview';
+                    newPreview.className = 'image-preview';
+                    newPreview.id = previewId;
+                    input.parentNode.parentNode.appendChild(newPreview);
+                }
+                status.className = 'image-status success';
+                status.textContent = '✓ Imagem carregada com sucesso';
+            };
+            
+            img.onerror = function() {
+                status.className = 'image-status error';
+                status.textContent = '✗ Erro ao carregar imagem';
+                if (preview) preview.style.display = 'none';
+            };
+            
+            img.src = url;
         }
     </script>
 </body>
