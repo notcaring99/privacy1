@@ -59,15 +59,18 @@ function generateIndexFile() {
         $template = preg_replace($pattern, $replacement, $template);
     }
     
-    // Substituir preços
-    $template = str_replace('R$ 10,00', 'R$ ' . number_format($configs['monthly_price'] ?? 10, 2, ',', '.'), $template);
-    $template = str_replace('R$ 47,00', 'R$ ' . number_format($configs['monthly_old_price'] ?? 47, 2, ',', '.'), $template);
-    $template = str_replace('R$ 27,00', 'R$ ' . number_format($configs['lifetime_price'] ?? 27, 2, ',', '.'), $template);
-    $template = str_replace('R$ 197,00', 'R$ ' . number_format($configs['lifetime_old_price'] ?? 197, 2, ',', '.'), $template);
+    // Substituir preços nos botões
+    $template = preg_replace('/De <span class="old-price">R\$ [\d,]+<\/span> por R\$ [\d,]+<\/span>/', 
+        'De <span class="old-price">R$ ' . number_format($configs['monthly_old_price'] ?? 47, 2, ',', '.') . '</span> por R$ ' . number_format($configs['monthly_price'] ?? 10, 2, ',', '.') . '</span>', 
+        $template, 1);
     
-    // Substituir URLs de checkout
-    $template = str_replace('https://pay.privacydade.co/privacy1mes/', $configs['checkout_url_monthly'] ?? 'https://pay.privacydade.co/privacy1mes/', $template);
-    $template = str_replace('https://pay.privacydade.co/privacyvitalicio/', $configs['checkout_url_lifetime'] ?? 'https://pay.privacydade.co/privacyvitalicio/', $template);
+    $template = preg_replace('/De <span class="old-price">R\$ [\d,]+<\/span> por R\$ [\d,]+<\/span>/', 
+        'De <span class="old-price">R$ ' . number_format($configs['lifetime_old_price'] ?? 197, 2, ',', '.') . '</span> por R$ ' . number_format($configs['lifetime_price'] ?? 27, 2, ',', '.') . '</span>', 
+        $template, 1);
+    
+    // Substituir URLs de checkout para usar o checkout interno
+    $template = str_replace('https://pay.privacydade.co/privacy1mes/', 'checkout.php?plan=monthly', $template);
+    $template = str_replace('https://pay.privacydade.co/privacyvitalicio/', 'checkout.php?plan=lifetime', $template);
     
     // Substituir caminhos das imagens
     foreach ($images as $key => $path) {
@@ -77,6 +80,9 @@ function generateIndexFile() {
                 break;
             case 'profile_image':
                 $template = str_replace('src/images/perfil1.png', $path, $template);
+                break;
+            case 'profile_image_main':
+                $template = str_replace('https://i.pinimg.com/736x/54/07/97/540797a2f501dafa106499a8ef3208ed.jpg', $path, $template);
                 break;
             case 'content_image1':
                 $template = str_replace('src/images/imagem1.png', $path, $template);

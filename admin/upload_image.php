@@ -26,6 +26,12 @@ if ($_POST && $_FILES) {
                 if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
                     // Atualizar no banco de dados
                     $relativePath = 'src/images/' . $filename;
+                    
+                    // Para profile_image_main, usar URL completa se necessário
+                    if ($key === 'profile_image_main') {
+                        $relativePath = $uploadPath; // ou construir URL completa se necessário
+                    }
+                    
                     $stmt = $pdo->prepare("UPDATE site_images SET image_path = ? WHERE image_key = ?");
                     $stmt->execute([$relativePath, $key]);
                 }

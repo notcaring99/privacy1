@@ -2,7 +2,7 @@
 require_once 'admin/config/database.php';
 
 // Buscar configurações de preço
-$stmt = $pdo->query("SELECT * FROM site_config WHERE config_key IN ('monthly_price', 'monthly_old_price', 'lifetime_price', 'lifetime_old_price', 'model_name')");
+$stmt = $pdo->query("SELECT * FROM site_config WHERE config_key IN ('monthly_price', 'monthly_old_price', 'lifetime_price', 'lifetime_old_price', 'model_name', 'checkout_url_monthly', 'checkout_url_lifetime')");
 $configs = [];
 while ($row = $stmt->fetch()) {
     $configs[$row['config_key']] = $row['config_value'];
@@ -25,7 +25,8 @@ if ($_POST) {
             
             // Redirecionar para o gateway de pagamento real
             $checkoutUrl = $plan === 'lifetime' ? $configs['checkout_url_lifetime'] : $configs['checkout_url_monthly'];
-            header('Location: ' . $checkoutUrl . '?' . http_build_query($_GET));
+            $redirectUrl = $checkoutUrl . '?' . http_build_query($_GET);
+            header('Location: ' . $redirectUrl);
             exit;
         } catch (Exception $e) {
             $error = 'Erro ao processar pedido. Tente novamente.';
@@ -67,6 +68,18 @@ if ($_POST) {
             overflow: hidden;
             width: 100%;
             max-width: 500px;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .checkout-header {
@@ -74,25 +87,47 @@ if ($_POST) {
             color: white;
             padding: 2rem;
             text-align: center;
+            position: relative;
+        }
+        
+        .checkout-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
         }
         
         .checkout-header h1 {
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
         
         .plan-info {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1.5rem;
+            border-radius: 12px;
             margin-top: 1rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 1;
         }
         
         .plan-name {
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
         
         .price-info {
@@ -109,8 +144,19 @@ if ($_POST) {
         }
         
         .current-price {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .discount-badge {
+            background: rgba(255, 255, 255, 0.9);
+            color: #ff6b3d;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
         }
         
         .checkout-body {
@@ -131,15 +177,18 @@ if ($_POST) {
         .form-group input {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #ddd;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
         }
         
         .form-group input:focus {
             outline: none;
             border-color: #ff6b3d;
+            box-shadow: 0 0 0 3px rgba(255, 107, 61, 0.1);
+            transform: translateY(-1px);
         }
         
         .required {
@@ -156,12 +205,34 @@ if ($_POST) {
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
             margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-checkout::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s;
         }
         
         .btn-checkout:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 61, 0.3);
+        }
+        
+        .btn-checkout:hover::before {
+            left: 100%;
+        }
+        
+        .btn-checkout:active {
+            transform: translateY(0);
         }
         
         .security-info {
@@ -186,12 +257,13 @@ if ($_POST) {
         }
         
         .error {
-            background: #fee;
+            background: linear-gradient(135deg, #fee 0%, #fdd 100%);
             color: #c33;
             padding: 1rem;
             border-radius: 8px;
             margin-bottom: 1rem;
             text-align: center;
+            border: 1px solid #fcc;
         }
         
         .back-link {
@@ -201,11 +273,41 @@ if ($_POST) {
             color: #ff6b3d;
             text-decoration: none;
             margin-bottom: 1rem;
-            transition: opacity 0.3s;
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
         
         .back-link:hover {
             opacity: 0.8;
+            transform: translateX(-3px);
+        }
+        
+        .features-list {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        
+        .features-list h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            text-align: center;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .feature-item i {
+            color: #ff6b3d;
+            font-size: 0.8rem;
         }
         
         @media (max-width: 768px) {
@@ -220,6 +322,14 @@ if ($_POST) {
                 gap: 1rem;
                 text-align: center;
             }
+            
+            .checkout-header {
+                padding: 1.5rem;
+            }
+            
+            .checkout-body {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -228,7 +338,13 @@ if ($_POST) {
         <div class="checkout-header">
             <h1><i class="fas fa-shield-alt"></i> Checkout Seguro</h1>
             <div class="plan-info">
-                <div class="plan-name">Plano <?= $planName ?></div>
+                <div class="plan-name">
+                    <i class="fas fa-crown"></i>
+                    Plano <?= $planName ?>
+                    <?php if ($plan === 'lifetime'): ?>
+                        <span class="discount-badge">MELHOR OFERTA</span>
+                    <?php endif; ?>
+                </div>
                 <div class="price-info">
                     <span class="old-price">R$ <?= number_format($oldPrice, 2, ',', '.') ?></span>
                     <span class="current-price">R$ <?= number_format($price, 2, ',', '.') ?></span>
@@ -238,31 +354,59 @@ if ($_POST) {
         
         <div class="checkout-body">
             <a href="index.html" class="back-link">
-                <i class="fas fa-arrow-left"></i> Voltar
+                <i class="fas fa-arrow-left"></i> Voltar ao site
             </a>
             
+            <div class="features-list">
+                <h3><i class="fas fa-star"></i> O que você vai receber:</h3>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Acesso a todos conteúdos exclusivos</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Chat ao vivo com a <?= htmlspecialchars($configs['model_name'] ?? 'modelo') ?></span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Vídeo chamada exclusiva</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span>Conteúdo sem censura</span>
+                </div>
+                <?php if ($plan === 'lifetime'): ?>
+                <div class="feature-item">
+                    <i class="fas fa-check"></i>
+                    <span><strong>Acesso vitalício - pague uma vez, use para sempre!</strong></span>
+                </div>
+                <?php endif; ?>
+            </div>
+            
             <?php if (isset($error)): ?>
-                <div class="error"><?= htmlspecialchars($error) ?></div>
+                <div class="error">
+                    <i class="fas fa-exclamation-triangle"></i> <?= htmlspecialchars($error) ?>
+                </div>
             <?php endif; ?>
             
             <form method="POST">
                 <div class="form-group">
                     <label for="name">Nome Completo <span class="required">*</span></label>
-                    <input type="text" id="name" name="name" required value="<?= htmlspecialchars($_POST['name'] ?? '') ?>">
+                    <input type="text" id="name" name="name" required value="<?= htmlspecialchars($_POST['name'] ?? '') ?>" placeholder="Digite seu nome completo">
                 </div>
                 
                 <div class="form-group">
                     <label for="email">E-mail <span class="required">*</span></label>
-                    <input type="email" id="email" name="email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                    <input type="email" id="email" name="email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" placeholder="seu@email.com">
                 </div>
                 
                 <div class="form-group">
                     <label for="phone">Telefone/WhatsApp</label>
-                    <input type="tel" id="phone" name="phone" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>">
+                    <input type="tel" id="phone" name="phone" value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>" placeholder="(11) 99999-9999">
                 </div>
                 
                 <button type="submit" class="btn-checkout">
-                    <i class="fas fa-credit-card"></i> Finalizar Compra
+                    <i class="fas fa-credit-card"></i> Finalizar Compra - R$ <?= number_format($price, 2, ',', '.') ?>
                 </button>
             </form>
             
@@ -275,8 +419,34 @@ if ($_POST) {
                     <i class="fas fa-shield-alt"></i>
                     <span>Dados Protegidos</span>
                 </div>
+                <div class="security-item">
+                    <i class="fas fa-undo"></i>
+                    <span>Garantia 30 dias</span>
+                </div>
             </div>
         </div>
     </div>
+    
+    <script>
+        // Adicionar máscara para telefone
+        document.getElementById('phone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            } else if (value.length >= 7) {
+                value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+            } else if (value.length >= 3) {
+                value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+            }
+            e.target.value = value;
+        });
+        
+        // Animação de loading no botão
+        document.querySelector('form').addEventListener('submit', function() {
+            const btn = document.querySelector('.btn-checkout');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+            btn.disabled = true;
+        });
+    </script>
 </body>
 </html>

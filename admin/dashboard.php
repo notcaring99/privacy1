@@ -241,6 +241,13 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
             max-height: 150px;
             border-radius: 8px;
             margin-top: 0.5rem;
+            object-fit: cover;
+        }
+        
+        .image-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
         
         .orders-table {
@@ -282,6 +289,24 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
             color: #721c24;
         }
         
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
         @media (max-width: 768px) {
             .main-grid {
                 grid-template-columns: 1fr;
@@ -294,6 +319,10 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
             .header {
                 padding: 1rem;
             }
+            
+            .image-group {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -302,6 +331,9 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
         <h1><i class="fas fa-shield-alt"></i> Privacy Admin</h1>
         <div class="user-info">
             <span>Bem-vindo, <?= htmlspecialchars($_SESSION['admin_user']) ?></span>
+            <a href="orders.php" class="btn-logout" style="margin-right: 1rem;">
+                <i class="fas fa-shopping-cart"></i> Pedidos
+            </a>
             <a href="logout.php" class="btn-logout">
                 <i class="fas fa-sign-out-alt"></i> Sair
             </a>
@@ -309,6 +341,18 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
     </div>
     
     <div class="container">
+        <?php if (isset($_GET['success'])): ?>
+            <div class="success-message">
+                <i class="fas fa-check-circle"></i> Configurações atualizadas com sucesso!
+            </div>
+        <?php endif; ?>
+        
+        <?php if (isset($_GET['error'])): ?>
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i> Erro ao atualizar configurações. Tente novamente.
+            </div>
+        <?php endif; ?>
+        
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="icon"><i class="fas fa-shopping-cart"></i></div>
@@ -384,16 +428,6 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
                                 <input type="number" step="0.01" id="lifetime_old_price" name="lifetime_old_price" value="<?= $configs['lifetime_old_price'] ?? '' ?>">
                             </div>
                             
-                            <div class="form-group">
-                                <label for="checkout_url_monthly">URL Checkout Mensal</label>
-                                <input type="url" id="checkout_url_monthly" name="checkout_url_monthly" value="<?= htmlspecialchars($configs['checkout_url_monthly'] ?? '') ?>">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="checkout_url_lifetime">URL Checkout Vitalício</label>
-                                <input type="url" id="checkout_url_lifetime" name="checkout_url_lifetime" value="<?= htmlspecialchars($configs['checkout_url_lifetime'] ?? '') ?>">
-                            </div>
-                            
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> Salvar Preços
                             </button>
@@ -402,15 +436,59 @@ $total_revenue = $stmt->fetch()['revenue'] ?? 0;
                     
                     <div id="images" class="tab-content">
                         <form action="upload_image.php" method="POST" enctype="multipart/form-data">
-                            <?php foreach ($images as $key => $image): ?>
+                            <div class="image-group">
                                 <div class="form-group">
-                                    <label for="<?= $key ?>"><?= ucfirst(str_replace('_', ' ', $key)) ?></label>
-                                    <input type="file" id="<?= $key ?>" name="<?= $key ?>" accept="image/*">
-                                    <?php if ($image['image_path']): ?>
-                                        <img src="../<?= htmlspecialchars($image['image_path']) ?>" alt="<?= htmlspecialchars($image['alt_text']) ?>" class="image-preview">
+                                    <label for="cover_image">Banner/Capa</label>
+                                    <input type="file" id="cover_image" name="cover_image" accept="image/*">
+                                    <?php if (isset($images['cover_image']) && $images['cover_image']['image_path']): ?>
+                                        <img src="../<?= htmlspecialchars($images['cover_image']['image_path']) ?>" alt="Banner" class="image-preview">
                                     <?php endif; ?>
                                 </div>
-                            <?php endforeach; ?>
+                                
+                                <div class="form-group">
+                                    <label for="profile_image_main">Foto de Perfil Principal</label>
+                                    <input type="file" id="profile_image_main" name="profile_image_main" accept="image/*">
+                                    <?php if (isset($images['profile_image_main']) && $images['profile_image_main']['image_path']): ?>
+                                        <img src="<?= htmlspecialchars($images['profile_image_main']['image_path']) ?>" alt="Perfil Principal" class="image-preview">
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            
+                            <div class="image-group">
+                                <div class="form-group">
+                                    <label for="profile_image">Foto de Perfil Popup</label>
+                                    <input type="file" id="profile_image" name="profile_image" accept="image/*">
+                                    <?php if (isset($images['profile_image']) && $images['profile_image']['image_path']): ?>
+                                        <img src="../<?= htmlspecialchars($images['profile_image']['image_path']) ?>" alt="Perfil Popup" class="image-preview">
+                                    <?php endif; ?>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="content_image1">Imagem de Conteúdo 1</label>
+                                    <input type="file" id="content_image1" name="content_image1" accept="image/*">
+                                    <?php if (isset($images['content_image1']) && $images['content_image1']['image_path']): ?>
+                                        <img src="../<?= htmlspecialchars($images['content_image1']['image_path']) ?>" alt="Conteúdo 1" class="image-preview">
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            
+                            <div class="image-group">
+                                <div class="form-group">
+                                    <label for="content_image2">Imagem de Conteúdo 2</label>
+                                    <input type="file" id="content_image2" name="content_image2" accept="image/*">
+                                    <?php if (isset($images['content_image2']) && $images['content_image2']['image_path']): ?>
+                                        <img src="../<?= htmlspecialchars($images['content_image2']['image_path']) ?>" alt="Conteúdo 2" class="image-preview">
+                                    <?php endif; ?>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="logo">Logo Privacy</label>
+                                    <input type="file" id="logo" name="logo" accept="image/*">
+                                    <?php if (isset($images['logo']) && $images['logo']['image_path']): ?>
+                                        <img src="../<?= htmlspecialchars($images['logo']['image_path']) ?>" alt="Logo" class="image-preview">
+                                    <?php endif; ?>
+                                </div>
+                            </div>
                             
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-upload"></i> Atualizar Imagens
