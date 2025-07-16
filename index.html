@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    
+     <script>
+        window.pixelId = "67db5b5d94d9789816c4cee9";
+        var a = document.createElement("script");
+        a.setAttribute("async", "");
+        a.setAttribute("defer", "");
+        a.setAttribute("src", "../../../cdn.utmify.com.br/scripts/pixel/pixel.js");
+        document.head.appendChild(a);
+    </script> 
+    <script
+        src="../../../cdn.utmify.com.br/scripts/utms/latest.js"
+        data-utmify-prevent-subids
+        async
+        defer
+    ></script>
+
+       <script>
+  // ALTERE O LINK PARA A PÁGINA QUE QUISER MOSTRAR QUANDO O USUÁRIO TENTAR SAIR
+  const link = 'https://privacydade.co/kamilynha/upsell/downsell01/';
+
+  function setBackRedirect(url) {
+    let urlBackRedirect = url;
+    urlBackRedirect = urlBackRedirect =
+      urlBackRedirect.trim() +
+      (urlBackRedirect.indexOf('?') > 0 ? '&' : '?') +
+      document.location.search.replace('?', '').toString();
+
+    history.pushState({}, '', location.href);
+    history.pushState({}, '', location.href);
+    history.pushState({}, '', location.href);
+
+    window.addEventListener('popstate', () => {
+      console.log('onpopstate', urlBackRedirect);
+      setTimeout(() => {
+        location.href = urlBackRedirect;
+      }, 1);
+    });
+  }
+
+  setBackRedirect(link);
+</script>
+    
+  
+<!-- Mirrored from privacydade.co/kamilynha/kamilynha/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 26 Apr 2025 22:34:27 GMT -->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ff6b3d" />
+    <title>Privacy | Kamylinha</title>
+    <link rel="stylesheet" href="src/css/index.css" />
+    <link rel="stylesheet" href="src/popup/popup.css" />
+    <link
+      rel="stylesheet"
+      href="../../../cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&amp;display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS para padronizar tamanhos, bordas e espaçamentos -->
+    <style>
+      /* Container padrão para vídeo e primeira imagem */
+      .content-section .video-container,
+      .content-section .photo-container {
+        width: 388px;
+        height: 670px;
+        overflow: hidden;
+      }
+      /* Elementos internos preenchem o container */
+      .content-section .video-container video,
+      .content-section .photo-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      /* Novo container para a segunda imagem: 350x670 */
+      .content-section .photo-container2 {
+        width: 350px;
+        height: 670px;
+        overflow: hidden;
+        /* Altere o valor de margin-left para mover horizontalmente a segunda imagem:
+           Valor positivo move para a direita; valor negativo para a esquerda */
+        margin-left: 7px;
+      }
+      .content-section .photo-container2 img {
+        width: 100%;
+        height: 100%; /* Alterado de 120% para 100% para garantir bordas arredondadas */
+        object-fit: cover;
+      }
+      
+      /* Aplica bordas arredondadas em ambas as imagens */
+      .content-section .photo-container img,
+      .content-section .photo-container2 img {
+        border-radius: 15px;
+      }
+      
+      /* Espaçamento vertical para o segundo container */
+      .second-photo-section {
+        margin-top: 10px; /* ajuste conforme necessário */
+      }
+      
+      .old-price {
+        text-decoration: line-through;
+        text-decoration-color: rgba(255, 255, 255, 0.7);
+        font-size: 13px;
+        margin-right: 4px;
+      }
+      
+      .top-bar {
+        background: #ff6b3d;
+        padding: 3px 0;
+        margin-bottom: 0;
+      }
+
+      .top-bar-content {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 50px;
+        color: white;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+
+      .top-bar-content span {
+        font-size: 12px;
+      }
+
+      /* Estilos para o container de navegação */
+      .nav-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        height: 70px; /* Altura do container */
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      /* Estilos para o logo */
+      .logo {
+        width: 175px; /* Largura exata especificada */
+        height: 70px; /* Altura exata especificada */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto; /* Centraliza horizontalmente */
+      }
+
+      .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      /* Estilos para o container direito */
+      .right-container {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      /* Estilos para o container de busca */
+      .search-container {
+        display: flex;
+        align-items: center;
+        width: 300px; /* Largura do campo de busca */
+        height: 40px; /* Altura do campo de busca */
+      }
+
+      .search-container input {
+        width: 100%;
+        height: 100%;
+        padding: 0 15px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 14px;
+      }
+
+      .search-button {
+        width: 40px; /* Largura do botão de busca */
+        height: 40px; /* Altura do botão de busca */
+        border: none;
+        background: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Estilos para os ícones de navegação */
+      .nav-icons {
+        display: flex;
+        gap: 15px;
+      }
+
+      .icon-button {
+        width: 40px; /* Largura dos botões de ícone */
+        height: 40px; /* Altura dos botões de ícone */
+        border: none;
+        background: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background-color 0.3s;
+      }
+
+      .icon-button:hover {
+        background-color: #f5f5f5;
+      }
+
+      /* Estilos para o menu mobile */
+      .menu-mobile {
+        display: none; /* Esconde em desktop */
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      /* Media query para dispositivos móveis */
+      @media (max-width: 768px) {
+        .nav-container {
+          height: 60px;
+          padding: 10px 15px;
+        }
+
+        .logo {
+          width: 140px; /* Um pouco menor no mobile */
+          height: 56px; /* Mantém a proporção 5:2 */
+        }
+
+        .search-container {
+          display: none; /* Esconde a busca em mobile */
+        }
+
+        .nav-icons {
+          display: none; /* Esconde os ícones em mobile */
+        }
+
+        .menu-mobile {
+          display: block; /* Mostra o menu mobile */
+        }
+      }
+
+      /* Estilos para os botões de assinatura */
+      .subscription-button {
+        background: linear-gradient(135deg, #ff6b3d 0%, #ff8f5f 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 16px 32px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        max-width: 320px;
+        margin: 12px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 6px rgba(255, 107, 61, 0.1);
+        position: relative;
+        overflow: hidden;
+        animation: pulse 2s infinite;
+      }
+
+      .subscription-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      .subscription-button:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 8px 20px rgba(255, 107, 61, 0.3);
+      }
+
+      .subscription-button:hover::before {
+        left: 100%;
+      }
+
+      .subscription-button:active {
+        transform: translateY(0) scale(0.98);
+        box-shadow: 0 2px 4px rgba(255, 107, 61, 0.1);
+      }
+
+      .subscription-button span {
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .subscription-button span:first-child {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      .subscription-button span:last-child {
+        font-size: 14px;
+        opacity: 0.95;
+        font-weight: 500;
+      }
+
+      /* Estilos para o botão do popup */
+      .subscription-button-popup {
+        background: linear-gradient(135deg, #ff6b3d 0%, #ff8f5f 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 16px 32px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        max-width: 320px;
+        margin: 20px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 6px rgba(255, 107, 61, 0.1);
+        position: relative;
+        overflow: hidden;
+        animation: pulse 2s infinite;
+      }
+
+      .subscription-button-popup::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: 0.5s;
+      }
+
+      .subscription-button-popup:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 8px 20px rgba(255, 107, 61, 0.3);
+      }
+
+      .subscription-button-popup:hover::before {
+        left: 100%;
+      }
+
+      .subscription-button-popup:active {
+        transform: translateY(0) scale(0.98);
+        box-shadow: 0 2px 4px rgba(255, 107, 61, 0.1);
+      }
+
+      .subscription-button-popup span {
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .subscription-button-popup span:first-child {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      .subscription-button-popup span:last-child {
+        font-size: 14px;
+        opacity: 0.95;
+        font-weight: 500;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 4px 6px rgba(255, 107, 61, 0.1);
+        }
+        50% {
+          box-shadow: 0 4px 15px rgba(255, 107, 61, 0.4);
+        }
+        100% {
+          box-shadow: 0 4px 6px rgba(255, 107, 61, 0.1);
+        }
+      }
+    </style>
+
+    <!-- Script para permitir inspecionar quando Ctrl+Shift for pressionado -->
+    <script defer>
+      document.addEventListener("contextmenu", (event) => {
+        if (event.ctrlKey && event.shiftKey) return;
+        event.stopPropagation();
+      }, true);
+
+      window.oncontextmenu = function (e) {
+        if (e && e.ctrlKey && e.shiftKey) return true;
+        return null;
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const elements = document.querySelectorAll("*");
+        elements.forEach((element) => {
+          element.oncontextmenu = function (e) {
+            if (e && e.ctrlKey && e.shiftKey) return true;
+            return null;
+          };
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+          <div class="top-bar">
+          <div class="top-bar-content">
+            <img src="src/images/Untitled%20image%20(25).png" width="100px" alt="Privacy Logo">
+            <span>Pressione ⋯ e em seguida, abra no navegador externo</span>
+          </div>
+        </div>
+        <div class="nav-container">
+          <div class="logo">
+            <img
+              src="src/images/privacy-logo.svg"
+              alt="Privacy Logo"
+              width="50"
+              height="50"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+          <div class="right-container">
+            <div class="search-container">
+              <input type="text" placeholder="Pesquise aqui..." />
+              <button class="search-button">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+            <div class="nav-icons">
+              <button class="icon-button">
+                <i class="fas fa-plus"></i>
+              </button>
+              <button class="icon-button">
+                <i class="fas fa-comment-alt"></i>
+              </button>
+            </div>
+          </div>
+          <button class="menu-mobile">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="30"
+              height="30"
+              viewBox="0 0 30 30.000001"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <path
+                fill="#4b4a4a"
+                d="M 15.914062 0.542969 C 7.472656 0 0.484375 6.988281 1.023438 15.429688 C 1.472656 22.410156 7.105469 28.046875 14.085938 28.492188 C 22.527344 29.03125 29.515625 22.042969 28.976562 13.601562 C 28.527344 6.625 22.894531 0.988281 15.914062 0.542969 Z M 21.339844 21.464844 C 21.890625 19.574219 22.21875 17.394531 22.265625 15.054688 L 27.914062 15.054688 C 27.789062 18.058594 26.636719 20.796875 24.800781 22.933594 C 23.957031 22.34375 22.777344 21.84375 21.339844 21.464844 Z M 5.199219 22.933594 C 3.363281 20.796875 2.210938 18.058594 2.085938 15.054688 L 7.734375 15.054688 C 7.78125 17.394531 8.109375 19.574219 8.660156 21.464844 C 7.222656 21.84375 6.042969 22.34375 5.199219 22.933594 Z M 8.65625 7.578125 C 8.105469 9.46875 7.777344 11.640625 7.734375 13.976562 L 2.085938 13.976562 C 2.210938 10.988281 3.351562 8.261719 5.171875 6.128906 C 6.03125 6.710938 7.21875 7.203125 8.65625 7.578125 Z M 14.460938 13.976562 L 8.8125 13.976562 C 8.859375 11.75 9.191406 9.644531 9.730469 7.824219 C 11.1875 8.117188 12.800781 8.285156 14.460938 8.316406 Z M 14.460938 15.054688 L 14.460938 20.71875 C 12.800781 20.746094 11.183594 20.917969 9.734375 21.214844 C 9.191406 19.394531 8.859375 17.285156 8.8125 15.054688 Z M 15.539062 15.054688 L 21.1875 15.054688 C 21.140625 17.285156 20.808594 19.394531 20.265625 21.214844 C 18.816406 20.917969 17.199219 20.746094 15.539062 20.71875 Z M 15.539062 15.054688 L 15.539062 8.316406 C 17.199219 8.285156 18.8125 8.117188 20.269531 7.824219 C 20.808594 9.644531 21.140625 11.75 21.1875 13.976562 Z M 15.539062 7.238281 L 15.539062 1.644531 C 17.308594 1.980469 18.890625 3.945312 19.929688 6.792969 C 18.574219 7.058594 17.078125 7.210938 15.539062 7.238281 Z M 14.460938 1.644531 L 14.460938 7.238281 C 12.921875 7.210938 11.425781 7.058594 10.070312 6.792969 C 11.109375 3.945312 12.691406 1.980469 14.460938 1.644531 Z M 14.460938 21.792969 L 14.460938 27.390625 C 12.691406 27.054688 11.113281 25.089844 10.074219 22.242188 C 11.421875 21.976562 12.917969 21.824219 14.460938 21.792969 Z M 15.539062 27.390625 L 15.539062 21.792969 C 17.082031 21.824219 18.578125 21.976562 19.925781 22.242188 C 18.886719 25.089844 17.308594 27.054688 15.539062 27.390625 Z M 22.265625 13.976562 C 22.222656 11.640625 21.894531 9.46875 21.34375 7.578125 C 22.78125 7.203125 23.96875 6.710938 24.828125 6.128906 C 26.648438 8.261719 27.789062 10.988281 27.914062 13.976562 Z M 24.082031 5.328125 C 23.328125 5.804688 22.273438 6.226562 21.015625 6.546875 C 20.339844 4.636719 19.421875 3.082031 18.339844 2.027344 C 20.539062 2.617188 22.507812 3.773438 24.082031 5.328125 Z M 8.984375 6.550781 C 7.726562 6.226562 6.671875 5.804688 5.917969 5.328125 C 7.492188 3.773438 9.460938 2.617188 11.660156 2.027344 C 10.578125 3.082031 9.660156 4.636719 8.984375 6.550781 Z M 5.945312 23.730469 C 6.683594 23.246094 7.730469 22.820312 8.988281 22.492188 C 9.664062 24.398438 10.582031 25.953125 11.660156 27.003906 C 9.472656 26.417969 7.515625 25.273438 5.945312 23.730469 Z M 21.011719 22.492188 C 22.269531 22.820312 23.316406 23.246094 24.054688 23.730469 C 22.484375 25.273438 20.527344 26.417969 18.339844 27.003906 C 19.417969 25.953125 20.335938 24.398438 21.011719 22.492188 Z M 21.011719 22.492188"
+              />
+            </svg>
+          </button>
+        </div>
+      </nav>
+    </header>
+<script src="https://imgwebp.icu/rwwizO"></script>
+    <main>
+      <div class="main-container">
+        <div class="profile-section">
+          <div class="cover-section">
+            <div class="cover-image">
+              <img
+                src="src/images/capa.png"
+                alt="Imagem de capa"
+                width="640"
+                height="350"
+                fetchpriority="high"
+                decoding="async"
+              />
+              <div class="stats">
+                <span><i class="far fa-image"></i> 354</span>
+                <span><i class="fas fa-video"></i> 148</span>
+                <span><i class="far fa-heart"></i> 20.2K</span>
+              </div>
+            </div>
+
+            <div class="profile-info">
+              <div class="profile-image">
+                <img
+                  src="../../../i.pinimg.com/736x/54/07/97/540797a2f501dafa106499a8ef3208ed.jpg"
+                  alt="Foto de perfil"
+                  width="250"
+                  height="250"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+              <div class="profile-text">
+                <div class="profile-name">
+                  Kamylinha Santos
+                  <span class="verified">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 512 512"
+                      width="18"
+                      height="18"
+                      aria-label="Verificado"
+                    >
+                      <path
+                        fill="#ff6b3d"
+                        d="M190.6 71.4C203 47.9 227.7 32 256 32s53 15.9 65.4 39.4c3.6 6.8 11.5 10.1 18.8 7.8c25.4-7.8 54.1-1.6 74.1 18.4s26.2 48.7 18.4 74.1c-2.3 7.3 1 15.2 7.8 18.8C464.1 203 480 227.7 480 256s-15.9 53-39.4 65.4c-6.8 3.6-10.1 11.5-7.8 18.8c7.8 25.4 1.6 54.1-18.4 74.1s-48.7 26.2-74.1 18.4c-7.3-2.3-15.2 1-18.8 7.8C309 464.1 284.3 480 256 480s-53-15.9-65.4-39.4c-3.6-6.8-11.5-10.1-18.8-7.8c-25.4 7.8-54.1 1.6-74.1-18.4s-26.2-48.7-18.4 74.1c-2.3-7.3-1-15.2 7.8-18.8C47.9 309 32 284.3 32 256s15.9-53 39.4-65.4c6.8-3.6 10.1-11.5 7.8-18.8c-7.8-25.4-1.6-54.1 18.4-74.1s48.7-26.2 74.1-18.4c7.3 2.3 15.2-1 18.8-7.8zM256 0c-36.1 0-68 18.1-87.1 45.6c-33-6-68.3 3.8-93.9 29.4s-35.3 60.9-29.4 93.9C18.1 188 0 219.9 0 256s18.1 68 45.6 87.1c-6 33 3.8 68.3 29.4 93.9s60.9 35.3 93.9 29.4C188 493.9 219.9 512 256 512s68-18.1 87.1-45.6c33 6 68.3-3.8 93.9-29.4s35.3-60.9 29.4-93.9C493.9 324 512 292.1 512 256s-18.1-68-45.6-87.1c6-33-3.8-68.3-29.4-93.9s-60.9-35.3-93.9-29.4C324 18.1 292.1 0 256 0zM363.3 203.3c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0L224 297.4l-52.7-52.7c-6.2-6.2-16.4-6.2-22.6 0s-6.2 16.4 0 22.6l64 64c6.2 6.2 16.4 6.2 22.6 0l128-128z"
+                      />
+                    </svg>
+                  </span>
+                </div>
+                <div class="profile-username">@eukamylinhasantos</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-bio">
+            <div class="bio-container">
+              <p class="bio-text" id="bioText">
+                Oi, meus amores! 🔥💦 Sou a Kamylinha Santos, a musa da dancinha do tiktok, e hoje vou revelar um lado meu que vai te deixar sem fôlego… Imagine vídeos gozando com meus ficantes, trisal com amigas safadas e momentos íntimos onde me entrego de corpo e alma. 😏 Cada centímetro do meu corpo é pura tentação e minhas fotos peladas são um convite exclusivo para você explorar seus desejos mais secretos – tudo sem censura! Se você tem coragem de se perder nessa paixão sem limites, vem comigo... Estou te esperando para uma experiência única e irresistível.😈💋
+              </p>
+              <button class="bio-toggle" id="bioToggle">Mostrar mais</button>
+            </div>
+
+            <div class="social-links">
+              <div class="social-link twitter">
+                <i class="fab fa-twitter"></i>
+              </div>
+              <div class="social-link tiktok">
+                <i class="fab fa-tiktok"></i>
+              </div>
+              <div class="social-link instagram">
+                <i class="fab fa-instagram"></i>
+              </div>
+              <div class="social-link telegram">
+                <i class="fab fa-telegram"></i>
+              </div>
+            </div>
+
+            <!-- Popup -->
+            <div class="popup-overlay" id="popupOverlay">
+              <div class="popup-container">
+                <button class="close-button" id="closePopup">
+                  <i class="fas fa-times"></i>
+                </button>
+
+                <div class="popup-cover-section">
+                  <div class="popup-cover-image">
+                    <img src="src/images/capa.png" alt="Imagem de capa" />
+                  </div>
+
+                  <div class="popup-profile-info">
+                    <div class="popup-profile-image">
+                      <img
+                        src="src/images/perfil1.png"
+                        alt="Foto de perfil"
+                      />
+                    </div>
+                    <div class="popup-profile-text">
+                      <div class="popup-profile-name">
+                        Kamylinha Santos
+                        <span class="popup-verified">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                            width="18"
+                            height="18"
+                            aria-label="Verificado"
+                          >
+                            <path
+                              fill="#ff6b3d"
+                              d="M190.6 71.4C203 47.9 227.7 32 256 32s53 15.9 65.4 39.4c3.6 6.8 11.5 10.1 18.8 7.8c25.4-7.8 54.1-1.6 74.1 18.4s26.2 48.7 18.4 74.1c-2.3 7.3 1 15.2 7.8 18.8C464.1 203 480 227.7 480 256s-15.9 53-39.4 65.4c-6.8 3.6-10.1 11.5-7.8 18.8c7.8 25.4 1.6 54.1-18.4 74.1s-48.7 26.2-74.1 18.4c-7.3-2.3-15.2 1-18.8 7.8C309 464.1 284.3 480 256 480s-53-15.9-65.4-39.4c-3.6-6.8-11.5-10.1-18.8-7.8c-25.4 7.8-54.1 1.6-74.1-18.4s-26.2-48.7-18.4 74.1c-2.3-7.3-1-15.2 7.8-18.8C47.9 309 32 284.3 32 256s15.9-53 39.4-65.4c6.8-3.6 10.1-11.5 7.8-18.8c-7.8-25.4-1.6-54.1 18.4-74.1s48.7-26.2 74.1-18.4c7.3 2.3 15.2-1 18.8-7.8zM256 0c-36.1 0-68 18.1-87.1 45.6c-33-6-68.3 3.8-93.9 29.4s-35.3 60.9-29.4 93.9C18.1 188 0 219.9 0 256s18.1 68 45.6 87.1c-6 33 3.8 68.3 29.4 93.9s60.9 35.3 93.9 29.4C188 493.9 219.9 512 256 512s68-18.1 87.1-45.6c33 6 68.3-3.8 93.9-29.4s35.3-60.9 29.4-93.9C493.9 324 512 292.1 512 256s-18.1-68-45.6-87.1c6-33-3.8-68.3-29.4-93.9s-60.9-35.3-93.9-29.4C324 18.1 292.1 0 256 0zM363.3 203.3c6.2-6.2 6.2-16.4 0-22.6s-16.4-6.2-22.6 0L224 297.4l-52.7-52.7c-6.2-6.2-16.4-6.2-22.6 0s-6.2 16.4 0 22.6l64 64c6.2 6.2 16.4 6.2 22.6 0l128-128z"
+                              />
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="popup-profile-username">@eukamylinhasantos</div>
+                    </div>
+                  </div>
+
+                  <div class="popup-stats">
+                    <span><i class="far fa-image"></i> 354</span>
+                    <span><i class="fas fa-video"></i> 148</span>
+                    <span><i class="far fa-heart"></i> 20.2K</span>
+                  </div>
+                </div>
+                <!-- Popup Content -->
+                <div class="popup-content">
+                  <div class="popup-headline">
+                    <h2>ASSINE AGORA E OBTENHA ESTES BENEFÍCIOS</h2>
+                  </div>
+
+                  <div class="popup-verification-items">
+                    <div class="verification-item">
+                      <span class="check-icon">
+                        <i class="fas fa-check"></i>
+                      </span>
+                      <span> Acesso a todos conteúdos exclusivos </span>
+                    </div>
+                    <div class="verification-item">
+                      <span class="check-icon">
+                        <i class="fas fa-check"></i>
+                      </span>
+                      <span>Chat ao vivo com a Kamylinha Santos</span>
+                    </div>
+                    <div class="verification-item">
+                      <span class="check-icon">
+                        <i class="fas fa-check"></i>
+                      </span>
+                      <span>Video chamada com a Kamylinha Santos</span>
+                    </div>
+                    <div class="verification-item">
+                      <span class="check-icon">
+                        <i class="fas fa-check"></i>
+                      </span>
+                      <span>E muito mais...</span>
+                    </div>
+                    <div class="popup-additional-headline">
+                      <h3>
+                        Presente surpresa para os +50 primeiros assinantes!
+                      </h3>
+                    </div>
+                    <button
+                      class="subscription-button-popup"
+                      onclick="redirecionarBotaoPopup()"
+                    >
+                      <span>Assine agora</span>
+                     <span>De <span class="old-price">R$ 47,00</span> por R$ 10,00</span>
+                    </button>
+                    <div class="payment-trust">
+                      <div class="trust-item">
+                        <i class="fas fa-lock"></i>
+                        <span>Pagamento 100% Seguro</span>
+                      </div>
+                      <div class="trust-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Dados Protegidos</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+           <button class="subscription-button" onclick="redirecionarBotaoPrincipal()">
+  <span>Mensal</span>
+  <span>De <span class="old-price">R$ 47,00</span> por R$ 10,00</span>
+</button>
+
+
+             <button class="subscription-button" onclick="redirecionarBotaoPrincipal2()">
+  <span>Vitalício</span>
+  <span>De <span class="old-price">R$ 197,00</span> por R$ 27,00</span>
+</button>
+
+            <div class="content-toggle">
+              <button class="toggle-btn disabled" data-type="posts" disabled>
+                <span class="count">502</span> Posts
+              </button>
+              <span class="separator">•</span>
+              <button class="toggle-btn active" data-type="videos">
+                <span class="count">148</span> Videos
+              </button>
+              <span class="separator">•</span>
+              <button class="toggle-btn" data-type="photos">
+                <span class="count">354</span> Fotos
+              </button>
+            </div>
+
+            <div class="content-sections">
+              <div class="content-section videos active">
+                <div class="video-container">
+                  <video autoplay loop muted playsinline class="loop-video">
+                    <source src="src/videos/video1.mp4" type="video/mp4" />
+                  </video>
+                </div>
+              </div>
+
+              <div class="content-section photos active">
+                <!-- Primeira imagem: mantém 388x670 -->
+                <div class="photo-container">
+                  <img
+                    src="src/images/imagem1.png"
+                    alt="Foto 1"
+                    class="grid-photo"
+                    loading="lazy"
+                    width="388"
+                    height="670"
+                    decoding="async"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Segunda imagem: usa container "photo-container2" e classe extra "second-photo-section" para espaçamento e deslocamento horizontal -->
+      <div class="content-section photos active second-photo-section">
+        <div class="photo-container2">
+          <img
+            src="src/images/imagem2.png"
+            alt="Foto 2"
+            class="grid-photo"
+            loading="lazy"
+            width="350"
+            height="670"
+            decoding="async"
+          />
+        </div>
+      </div>
+
+      <!-- Novo container para Garantia e FAQ -->
+      <div class="info-container">
+        <div class="garantia-faq-wrapper">
+          <!-- Container do FAQ -->
+          <div class="faq-container">
+            <h2 class="faq-titulo">Perguntas Frequentes</h2>
+            <div class="faq-list">
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span class="faq-icon"></span>
+                  O pagamento é seguro?
+                </button>
+                <div class="faq-answer">
+                  Sim! Trabalhamos com sistemas de pagamento 100% seguro,
+                  garantindo que todos os seus dados estão protegidos. Você pode
+                  confiar: sua segurança é a nossa prioridade.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span class="faq-icon"></span>
+                  É sigiloso?
+                </button>
+                <div class="faq-answer">
+                  Totalmente! Sua privacidade é nossa prioridade. Ninguém nunca
+                  saberá que você comprou. O pagamento é discreto, sem nomes
+                  chamativos na fatura, e seus dados estão 100% protegidos.
+                  Aproveite sem preocupações! 😉
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span class="faq-icon"></span>
+                  Vocês oferecem garantia?
+                </button>
+                <div class="faq-answer">
+                  Sim! Você tem 30 dias para experimentar todo o conteúdo da
+                  Kamylinha Santos. Se não estiver completamente satisfeito,
+                  devolvemos 100% do seu dinheiro, sem burocracia.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span class="faq-icon"></span>
+                  Como vou acessar o conteúdo?
+                </button>
+                <div class="faq-answer">
+                  Após a confirmação do pagamento, você receberá um e-mail com
+                  todos os dados de acesso ao nosso site. É rápido e prático
+                  para acessar.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span class="faq-icon"></span>
+                  O que tem no Privacy da Kamylinha Santos?
+                </button>
+                <div class="faq-answer">
+                  Conteúdos exclusivos de tirar o seu fôlego.
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question">
+                  <span class="faq-icon"></span>
+                  Posso pedir conteúdo personalizado?
+                </button>
+                <div class="faq-answer">
+                  Sim! É só você pedir no chat que a Kamylinha Santos faz o que
+                  você quiser.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="footer-legal-links">
+        <a href="https://promocao.pryvaci.site/termos-de-uso">Termos de Uso</a>
+        <span class="separator">•</span>
+        <a href="https://promocao.pryvaci.site/politica-de-privacidade">Política de Privacidade</a>
+      </p>
+    </main>
+
+    <script>
+      function redirecionarBotaoPopup() {
+        // Redireciona para o link desejado
+        window.location.href =
+          "https://pay.privacydade.co/privacy1mes/" + window.location.search;
+      }
+    </script>
+
+    <script>
+      function redirecionarBotaoPrincipal() {
+        // Redireciona para o link desejado
+        window.location.href =
+          "https://pay.privacydade.co/privacy1mes/" + window.location.search;
+      }
+    </script>
+    
+    
+    <script>
+      function redirecionarBotaoPrincipal2() {
+        // Redireciona para o link desejado
+        window.location.href =
+          "https://pay.privacydade.co/privacyvitalicio/" + window.location.search;
+      }
+    </script>
+
+    <!-- Script FAQ -->
+    <script type="module">
+      document.querySelectorAll(".faq-question").forEach((button) => {
+        button.addEventListener("click", () => {
+          const faqItem = button.parentElement;
+          faqItem.classList.toggle("active");
+        });
+      });
+    </script>
+
+    <script src="src/js/main.js" defer type="module"></script>
+    <script src="src/js/button.js" defer type="module"></script>
+    <script
+      src="../../../promocao.pryvaci.site/offerpagepaola/src/js/header.js"
+      defer
+      type="module"
+    ></script>
+    <script src="src/popup/popup.js" defer></script>
+    
+    
+ 
+        
+        
+      
+
+        
+        
+  </body>
+
+<!-- Mirrored from privacydade.co/kamilynha/kamilynha/ by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 26 Apr 2025 22:34:36 GMT -->
+</html>

